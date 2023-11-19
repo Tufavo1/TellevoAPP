@@ -1,0 +1,147 @@
+* {
+    font-family: 'Roboto Condensed', sans-serif;
+    font-weight: bold;
+}
+
+.container-btn-back {
+    .ion-fixed {
+        position: fixed;
+        z-index: 999;
+        border-radius: 50%;
+        padding: 10px;
+        font-size: 24px;
+    }
+
+    ion-icon.back,
+    ion-icon.logout {
+        font-size: 40px;
+        color: #00aaff;
+        cursor: pointer;
+    }
+
+    ion-icon.back:hover,
+    ion-icon.logout:hover {
+        transform: scale(1.1);
+    }
+}
+
+.background-image {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('/assets/img/fondo.jpg');
+    background-size: cover;
+    background-position: center;
+    filter: blur(5px);
+    z-index: -1;
+}
+
+
+ion-content {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    top: 30%;
+
+    ion-card {
+        width: 100%;
+        height: 100%;
+        margin: 0 auto;
+        overflow: auto;
+        --background: transparent;
+
+        ion-card-title {
+            font-size: 30px;
+            color: #fff;
+            text-transform: uppercase;
+            text-align: center;
+            background-image: linear-gradient(90deg, transparent 20%, #000 20%, #000 40%, transparent 40%);
+            background-size: 200% 100%;
+            animation: wave 2s linear infinite;
+        }
+
+        @keyframes wave {
+            0% {
+                background-position: -100% 0;
+            }
+
+            100% {
+                background-position: 100% 0;
+            }
+        }
+
+        ion-card-subtitle {
+            font-size: 20px;
+            color: #fff;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .centered-label {
+            text-align: center;
+        }
+    }
+
+    ion-button {
+        --background: #00aaff;
+        color: #FFF;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding-top: 40px;
+        margin: 0 auto;
+        width: 100%;
+    }
+
+    ion-item {
+        --ion-item-background: rgba(0, 0, 0, 0.3);
+        --ion-item-text-color: #fff;
+        --ion-item-padding-start: 10px;
+        --ion-item-padding-end: 10px;
+        padding: 8px;
+
+        ion-input {
+            color: #fff;
+            background-color: transparent;
+            border: none;
+            border-bottom: 1px solid #fff;
+            border-radius: 0;
+            padding: 5px;
+            text-align: center;
+        }
+
+        ion-input:hover {
+            color: #00aaff;
+            border-bottom: 1px solid #fff;
+            transition: color 0.3s, border-color 0.3s;
+        }
+
+        ion-icon {
+            color: #fff;
+            font-size: 25px;
+        }
+    }
+
+    /* Estilos para el botón de recuperación */
+    .recuperarbtn {
+        --background: #00aaff;
+        color: #fff;
+        border-radius: 25px;
+        padding: 10px 20px;
+        font-size: 16px;
+        text-transform: uppercase;
+    }
+
+    .recuperarbtn:hover {
+        --background: #fff;
+        color: #000;
+    }
+
+    .recuperarbtn ion-icon {
+        margin-left: 5px;
+        font-size: 20px;
+    }
+
+}

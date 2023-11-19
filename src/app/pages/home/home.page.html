@@ -1,0 +1,16 @@
+<ion-content class="fullscreen-bg">
+  <div class="background-image"></div>
+  <ion-card class="animated-card">
+    <img src="/assets/icon/logo-icon.png" alt="Imagen">
+    <ion-card-header>
+      <h1 class="title show">Tellevoapp <ion-icon name="car-sport-outline"></ion-icon> <br> Donde Estes A Donde Quieras!
+      </h1>
+      <app-slide [slides]="slides"></app-slide>
+      <div class="container-button">
+        <ion-button class="move-button" (click)="moveButton()">
+          <span>Comenzar</span><ion-icon name="arrow-forward"></ion-icon>
+        </ion-button>
+      </div>
+    </ion-card-header>
+  </ion-card>
+</ion-content>

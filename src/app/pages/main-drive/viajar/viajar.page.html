@@ -1,0 +1,69 @@
+<ion-header>
+  <div class="fixed-profile" (click)="abrirPerfil()">
+    <ion-button fill="clear">
+      <ion-img [src]="userImage" alt="Tu perfil"></ion-img>
+    </ion-button>
+  </div>
+
+  <div class="fixed-search">
+    <ion-searchbar placeholder="Buscar"></ion-searchbar>
+  </div>
+
+</ion-header>
+
+<ion-content>
+  <div class="background-image"></div>
+  <ng-container *ngIf="loaded; else loadingContent">
+    <ion-list>
+      <h1 title="title">Selecciona un vehiculo, paga y disfruta de un buen Viaje.</h1>
+      <ion-item *ngFor="let vehiculo of vehiculosRegistrados">
+        <ion-button class="btn-item" expand="full" (click)="realizarPago(vehiculo)">
+          <ion-avatar slot="start">
+            <ion-icon name="car-outline"></ion-icon>
+          </ion-avatar>
+          <ion-label>
+            <h2>{{ vehiculo.modelo }}</h2>
+            <p>Nombre: {{ vehiculo.nombre }}</p>
+            <p>Año: {{ vehiculo.anio }}</p>
+            <p>Patente: {{ vehiculo.patente }}</p>
+            <p>destino: {{ vehiculo.destino }}</p>
+            <p>Asientos Disponibles: {{ vehiculo.cantidad }}</p>
+            <p>Costo viaje: $ {{ vehiculo.costo }}</p>
+          </ion-label>
+        </ion-button>
+      </ion-item>
+    </ion-list>
+  </ng-container>
+  <ng-template #loadingContent>
+    <ion-list>
+      <ion-item *ngFor="let vehicle of [1, 2]">
+        <ion-button class="btn-item" expand="full">
+          <ion-avatar slot="start">
+            <ion-skeleton-text animated style="width: 40px; height: 40px;"></ion-skeleton-text>
+          </ion-avatar>
+          <ion-label>
+            <h2><ion-skeleton-text animated style="width: 80px;"></ion-skeleton-text></h2>
+            <p><ion-skeleton-text animated style="width: 60px;"></ion-skeleton-text></p>
+            <p><ion-skeleton-text animated style="width: 30px;"></ion-skeleton-text></p>
+          </ion-label>
+        </ion-button>
+      </ion-item>
+    </ion-list>
+  </ng-template>
+</ion-content>
+
+<div class="menu-navigation">
+  <ion-buttons class="container-button">
+    <ion-button (click)="volverPaginaAnterior()">
+      <ion-icon class="back" name="arrow-back-circle-outline"></ion-icon>
+    </ion-button>
+
+    <ion-button (click)="mostrarHistorial()">
+      <ion-icon name="id-card-outline"></ion-icon>
+    </ion-button>
+
+    <ion-button class="btn-logout" (click)="mostrarConfirmacionCerrarSesion()"><ion-icon
+        name="log-out-outline"></ion-icon>
+    </ion-button>
+  </ion-buttons>
+</div>

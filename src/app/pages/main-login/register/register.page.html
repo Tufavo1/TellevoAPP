@@ -1,0 +1,67 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start" #volver>
+      <ion-icon class="back" (click)="volverPaginaAnterior()" name="arrow-back-circle-outline"></ion-icon>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-text-center" #main>
+  <div class="background-image"></div>
+  <ion-card>
+    <ion-card-title>Registro</ion-card-title>
+    <ion-card-subtitle class="ion-text-lowercase">Disfruta Y vive de las mejores
+      experiencias</ion-card-subtitle>
+
+    <div class="capture-container">
+      <ion-img class="view-photo" [src]="fotoTomada" *ngIf="fotoTomada"></ion-img>
+      <ion-icon name="person-circle" class="user-icon" *ngIf="!fotoTomada" ng-reflect-name="person-circle"></ion-icon>
+      <ion-button class="btn-deletephoto" (click)="borrarFoto()" color="danger" *ngIf="fotoTomada">
+        <ion-icon name="trash-outline"></ion-icon>
+      </ion-button>
+      <ion-button class="btn-takephoto" (click)="tomarFoto()" *ngIf="!fotoTomada">
+        <ion-icon name="camera-outline" slot="end"></ion-icon> Tomar Foto
+      </ion-button>
+    </div>
+
+    <ion-card-content #section>
+      <ion-item>
+        <ion-input [(ngModel)]="names" type="text" placeholder="Nombre Completo"
+          [ngClass]="{ 'campo-faltante': !names }"></ion-input>
+        <ion-icon name="person-outline"></ion-icon>
+
+      </ion-item>
+      <ion-item>
+        <ion-input [(ngModel)]="direccion" type="text" placeholder="Direccion de Domicilio" ng-reflect-name="direccion">
+        </ion-input>
+        <ion-icon name="location-outline"></ion-icon>
+      </ion-item>
+      <ion-item>
+        <ion-input [(ngModel)]="numero" type="number" placeholder="Numero De Telefono" ng-reflect-name="numero">
+        </ion-input>
+        <ion-icon name="call"></ion-icon>
+      </ion-item>
+      <ion-item>
+        <ion-input [(ngModel)]="fechaNacimiento" type="date" [value]="fechaNacimiento"
+          ng-reflect-name="fechaNacimiento">Fecha Nacimiento</ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-input [(ngModel)]="email" type="text" placeholder="Correo" ng-reflect-name="email"></ion-input>
+        <ion-icon name="mail-outline"></ion-icon>
+      </ion-item>
+      <ion-item>
+        <ion-input [(ngModel)]="password" type="password" placeholder="contrasennia"
+          ng-reflect-name="password"></ion-input>
+        <ion-icon name="lock-closed-outline"></ion-icon>
+      </ion-item>
+
+      <div class="iniciar-btn-register">
+        <ion-button shape="round" fill="solid" class="registrarbtn" (click)="registrar()">Registrarse</ion-button>
+      </div>
+    </ion-card-content>
+    <div class="ion-card-footer">
+      <span class="text-footer">Estas Registrado?</span>
+      <button (click)="IrAllogin()" class="btn-login" routerLink="main-login/registro">Inicia Aqui</button>
+    </div>
+  </ion-card>
+</ion-content>

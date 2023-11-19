@@ -1,0 +1,62 @@
+<ion-header>
+  <div class="fixed-profile" (click)="abrirPerfil()">
+    <ion-button fill="clear">
+      <ion-img [src]="userImage" alt="Tu perfil"></ion-img>
+    </ion-button>
+  </div>
+</ion-header>
+
+<ion-content>
+  <div class="background-image"></div>
+  <h1>Historial de Servicios</h1>
+  <div *ngIf="isLoading" class="loading-overlay">
+    <div class="loading-spinner"></div>
+    <h3>Buscando Datos del Historial</h3>
+  </div>
+
+  <div class="container-history" *ngIf="historialCompras.length > 0">
+    <ion-list>
+      <table>
+        <thead>
+          <tr>
+            <th>Fecha de Compra</th>
+            <th>Destino</th>
+            <th>Patente</th>
+            <th>Costo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let compra of historialCompras">
+            <td>{{ compra.fecha }} {{ compra.hora }}</td>
+            <td>{{ compra.destino }}</td>
+            <td>{{ compra.patente }}</td>
+            <td>${{ compra.costo }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </ion-list>
+  </div>
+
+  <div class="container-no-history" *ngIf="historialCompras.length === 0 && !isLoading">
+    <ion-note>
+      No hay historial de compras.
+    </ion-note>
+  </div>
+</ion-content>
+
+
+<div class="menu-navigation">
+  <ion-buttons class="container-button">
+    <ion-button (click)="volverPaginaAnterior()">
+      <ion-icon class="back" name="arrow-back-circle-outline"></ion-icon>
+    </ion-button>
+
+    <ion-button (click)="mostrarHistorial()">
+      <ion-icon name="id-card-outline"></ion-icon>
+    </ion-button>
+
+    <ion-button class="btn-logout" (click)="mostrarConfirmacionCerrarSesion()"><ion-icon
+        name="log-out-outline"></ion-icon>
+    </ion-button>
+  </ion-buttons>
+</div>

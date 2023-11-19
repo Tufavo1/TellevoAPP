@@ -1,0 +1,82 @@
+<ion-header>
+    <div class="btn-container">
+        <ion-button class="btn-menu" (click)="registrarVehiculo()">
+            registrar mi vehiculo
+        </ion-button>
+    </div>
+</ion-header>
+
+<ion-content class="fullscreen-bg">
+    <div class="background-image"></div>
+    <ion-card>
+        <div class="capture-container">
+            <ion-img class="view-photo" [src]="userData.fotoTomada" alt="Foto del usuario"></ion-img>
+            <ion-button class="btn-editar" expand="full" (click)="cambiarImagen()">
+                Cambiar Imagen
+            </ion-button>
+        </div>
+        <ion-card-content class="ion-padding">
+            <ion-card-header>
+                <ion-card-title>Datos Personales</ion-card-title>
+            </ion-card-header>
+            <ion-list>
+                <ion-item>
+                    <ion-label class="title-item" position="stacked">Nombre</ion-label>
+                    <ion-input [(ngModel)]="userData.names" disabled></ion-input>
+                </ion-item>
+
+                <ion-item>
+                    <ion-label class="title-item" position="stacked">Dirección</ion-label>
+                    <ion-input [(ngModel)]="userData.direccion" [disabled]="!editMode"
+                        (ngModelChange)="onCampoCambiado()"></ion-input>
+                </ion-item>
+
+                <ion-item>
+                    <ion-label class="title-item" position="stacked">Fecha de Nacimiento</ion-label>
+                    <ion-input [(ngModel)]="userData.fechaNacimiento" [disabled]="!editMode"
+                        (ngModelChange)="onCampoCambiado()"></ion-input>
+                </ion-item>
+
+                <ion-item>
+                    <ion-label class="title-item" position="stacked">Correo Electrónico</ion-label>
+                    <ion-input [(ngModel)]="userData.email" [disabled]="!editMode"
+                        (ngModelChange)="onCampoCambiado()"></ion-input>
+                </ion-item>
+
+                <ion-item>
+                    <ion-label class="title-item" position="stacked">Número de Teléfono</ion-label>
+                    <ion-input [(ngModel)]="userData.numero" [disabled]="!editMode"
+                        (ngModelChange)="onCampoCambiado()"></ion-input>
+                </ion-item>
+
+                <div class="container-btn-edit">
+                    <ion-button class="btn-change" (click)="activarEdicion()"
+                        *ngIf="!editMode && !guardandoCambios && !cambiosRealizados">Editar Perfil</ion-button>
+
+                    <ion-button class="btn-change guardar" (click)="guardarCambios()"
+                        *ngIf="editMode && cambiosRealizados">Guardar</ion-button>
+
+                    <ion-button class="btn-change cancelar" (click)="cancelarEdicion()"
+                        *ngIf="editMode || guardandoCambios">Cancelar</ion-button>
+                </div>
+            </ion-list>
+
+        </ion-card-content>
+    </ion-card>
+</ion-content>
+
+<div class="menu-navigation">
+    <ion-buttons class="container-button">
+        <ion-button (click)="volverPaginaAnterior()">
+            <ion-icon class="back" name="arrow-back-circle-outline"></ion-icon>
+        </ion-button>
+
+        <ion-button (click)="mostrarHistorial()">
+            <ion-icon name="id-card-outline"></ion-icon>
+        </ion-button>
+
+        <ion-button class="btn-logout" (click)="mostrarConfirmacionCerrarSesion()"><ion-icon
+                name="log-out-outline"></ion-icon>
+        </ion-button>
+    </ion-buttons>
+</div>

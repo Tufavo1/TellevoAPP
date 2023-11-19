@@ -1,0 +1,35 @@
+<ion-header>
+  <div class="container-btn-back">
+    <ion-buttons slot="start" class="ion-fixed" position="fixed" #volver>
+      <ion-icon class="back" (click)="volverPaginaAnterior()" name="arrow-back-circle-outline"></ion-icon>
+    </ion-buttons>
+  </div>
+</ion-header>
+
+<ion-content class="ion-text-center" #main>
+  <div class="background-image"></div>
+  <ion-card>
+    <ion-card-title>¿Olvidaste tu contraseña?</ion-card-title>
+    <ion-card-header>
+      <ion-card-subtitle class="ion-text-lowercase">Ingresa tu correo electrónico para restablecer tu
+        contraseña</ion-card-subtitle>
+    </ion-card-header>
+
+    <ion-card-content #form>
+      <form (submit)="enviarCorreoRecuperacion()" #forgotPassForm="ngForm">
+        <ion-item>
+          <ion-input [(ngModel)]="email" name="email" type="text" placeholder="Correo Electrónico"></ion-input>
+          <ion-icon name="mail-outline"></ion-icon>
+        </ion-item>
+
+        <div class="recuperar-btn">
+          <ion-button shape="round" fill="solid" class="recuperarbtn" type="submit">
+            Enviar link
+            <ion-icon name="send-outline"></ion-icon>
+          </ion-button>
+          <div class="mensaje">{{ mensaje }}</div>
+        </div>
+      </form>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

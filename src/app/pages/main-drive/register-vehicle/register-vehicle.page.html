@@ -1,0 +1,163 @@
+<ion-header>
+  <div class="container-Popover">
+    <ion-button (click)="presentPopover($event)">
+      <ion-icon name="menu"></ion-icon>
+    </ion-button>
+  </div>
+
+  <div class="fixed-profile" (click)="abrirPerfil()">
+    <ion-button fill="clear">
+      <ion-img [src]="userImage" alt="Tu perfil"></ion-img>
+    </ion-button>
+  </div>
+</ion-header>
+
+<ion-content class="fullscreen-bg">
+  <div class="background-image"></div>
+  <div class="loading-overlay" *ngIf="cargando">
+    <div class="loading-spinner"></div>
+    <h3>Cargando Datos...</h3>
+  </div>
+  <ng-container *ngIf="!cargando && vehiculoExistente; else formularioVehiculo">
+    <ion-card class="view-details">
+      <ion-card-header>
+        <ion-card-title>Datos Del Vehiculo</ion-card-title>
+      </ion-card-header>
+      <ion-card-content class="ion-padding">
+        <ion-list formGroup="vehicleForm">
+
+          <ion-item>
+            <ion-input type="text" id="nombreDuenio" [value]="vehiculoExistente?.nombre"
+              [disabled]="vehiculoExistente !== null">Nombre Conductor:</ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-input type="text" id="destinoVehiculo" [value]="vehiculoExistente?.destino"
+              [disabled]="vehiculoExistente !== null">Destino del Conductor:</ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-input id="rut" [value]="vehiculoExistente?.rut" [disabled]="vehiculoExistente !== null">Rut del
+              Conductor:</ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-input id="cantidad" [value]="vehiculoExistente?.cantidad"
+              [disabled]="vehiculoExistente !== null">asientos del vehiculo: </ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-input type="text" id="patenteVehiculo" [value]="vehiculoExistente?.patente"
+              [disabled]="vehiculoExistente !== null">Patente Del vehiculo:</ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-input type="text" id="anioVehiculo" [value]="vehiculoExistente?.anio"
+              [disabled]="vehiculoExistente !== null">año del Vehiculo</ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-input type="text" id="modeloVehiculo" [value]="vehiculoExistente?.modelo"
+              [disabled]="vehiculoExistente !== null">Modelo y marca del vehiculo:</ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-input id="costo" [value]="vehiculoExistente?.costo"
+              [disabled]="vehiculoExistente !== null">Costo</ion-input>
+          </ion-item>
+
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+  </ng-container>
+
+  <ng-template #formularioVehiculo>
+    <ion-card class="register-vehicle" *ngIf="!vehiculoExistente">
+      <ion-card-header>
+        <ion-card-title>Registro del Vehículo</ion-card-title>
+      </ion-card-header>
+      <div class="capture-container">
+        <ion-img class="view-photo" [src]="fotoTomada" *ngIf="fotoTomada"></ion-img>
+        <ion-icon name="car-sport-outline" class="user-icon" *ngIf="!fotoTomada"
+          ng-reflect-name="person-circle"></ion-icon>
+        <ion-button class="btn-deletephoto" (click)="borrarFoto()" color="danger" *ngIf="fotoTomada">
+          <ion-icon name="trash-outline"></ion-icon>
+        </ion-button>
+        <ion-button class="btn-takephoto" (click)="tomarFoto()" *ngIf="!fotoTomada">
+          <ion-icon name="camera-outline"></ion-icon> Tomar Foto
+        </ion-button>
+      </div>
+      <ion-card-content class="ion-padding">
+        <ion-list formGroup="vehicleForm">
+          <ion-item>
+            <ion-input type="text" id="nombreDuenio" [value]="vehiculoExistente?.nombre"
+              placeholder="Nombre: Jose Romero"
+              [ngClass]="{ 'campo-faltante': !vehiculoExistente && !nombre }"></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-input type="text" id="destinoVehiculo" [value]="vehiculoExistente?.destino"
+              placeholder="Destino: av. irrarazaval"
+              [ngClass]="{ 'campo-faltante': !vehiculoExistente && !destino }"></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-input id="rut" [value]="vehiculoExistente?.rut" [counter]="true" maxlength="12"
+              placeholder="Rut: 12.635.896-k" [ngClass]="{ 'campo-faltante': !vehiculoExistente && !rut }"></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-input id="cantidad" [value]="vehiculoExistente?.cantidad" [counter]="true" maxlength="1"
+              placeholder="Cantidad de pasajeros: 1-2-3-4-5-6-7-8"
+              [ngClass]="{ 'campo-faltante': !vehiculoExistente && !cantidad }"></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-input type="text" id="patenteVehiculo" [value]="vehiculoExistente?.patente" [counter]="true"
+              maxlength="6" placeholder="Patente Del Vehículo: RKFX49"
+              [ngClass]="{ 'campo-faltante': !vehiculoExistente && !patente }"></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-input type="text" id="anioVehiculo" [value]="vehiculoExistente?.anio" [counter]="true" maxlength="4"
+              placeholder="Año Del Vehículo: 1995"
+              [ngClass]="{ 'campo-faltante': !vehiculoExistente && !anio }"></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-input type="text" id="modeloVehiculo" [value]="vehiculoExistente?.modelo"
+              placeholder="Modelo y marca Del Vehículo: SUV MG ZS"
+              [ngClass]="{ 'campo-faltante': !vehiculoExistente && !modelo }"></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-input type="number" id="costo" [value]="vehiculoExistente?.costo"
+              placeholder="Ingresar el costo de la siguiente manera: $ 12.000"
+              [ngClass]="{ 'campo-faltante': !vehiculoExistente && !costo }"></ion-input>
+          </ion-item>
+
+          <div class="btn-register">
+            <ion-button shape="round" fill="solid" class="registerbtn" (click)="mostrarMensajeConfirmacion()">Registrar
+              Vehículo</ion-button>
+          </div>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+  </ng-template>
+</ion-content>
+
+<div class="menu-navigation">
+  <ion-buttons class="container-button">
+    <ion-button (click)="volverPaginaAnterior()">
+      <ion-icon class="back" name="arrow-back-circle-outline"></ion-icon>
+    </ion-button>
+
+    <ion-button (click)="mostrarHistorial()">
+      <ion-icon name="id-card-outline"></ion-icon>
+    </ion-button>
+
+    <ion-button class="btn-logout" (click)="mostrarConfirmacionCerrarSesion()"><ion-icon
+        name="log-out-outline"></ion-icon>
+    </ion-button>
+  </ion-buttons>
+</div>

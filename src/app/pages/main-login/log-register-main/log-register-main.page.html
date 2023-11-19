@@ -1,0 +1,28 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start" #volver>
+      <ion-icon class="back" (click)="volverPaginaAnterior()" name="arrow-back-circle-outline"></ion-icon>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-text-center" #main>
+  <div class="background-image"></div>
+  <ion-card class="ion-no-margin">
+    <ion-card-header>
+      <ion-card-subtitle class="ion-text-lowercase">Inicia y Disfruta de las mejores experiencias <br> o <br> Registrate
+        y Disfruta de esta APP al limite</ion-card-subtitle>
+    </ion-card-header>
+
+    <ion-card-content>
+      <div class="iniciar-btns" #btnes>
+        <ion-button size="medium" fill="solid" shape="round" class="inicarbtn" routerLink="/main-login/login"><ion-icon
+            name="log-in-outline"></ion-icon>
+          Iniciar</ion-button>
+        <ion-button size="medium" fill="outline" shape="round" class="registrarbtn white-border"
+          routerLink="/main-login/register"><ion-icon name="book-outline"></ion-icon>
+          Registrarse</ion-button>
+      </div>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

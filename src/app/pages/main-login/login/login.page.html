@@ -1,0 +1,44 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start" #volver>
+      <ion-icon class="back" (click)="volverPaginaAnterior()" name="arrow-back-circle-outline"></ion-icon>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-text-center" #main>
+  <div class="background-image"></div>
+  <div *ngIf="isLoading" class="loading-overlay">
+    <div class="loading-spinner"></div>
+    <h3>Autenticando Usuario</h3>
+  </div>
+  <ion-card>
+    <ion-card-content>
+      <form (submit)="iniciarSesion()" #form>
+        <div class="form-wrap">
+          <h2 class="titulo">Iniciar Sesion <ion-icon name="navigate-outline"></ion-icon></h2>
+          <ion-item>
+            <ion-input type="text" [(ngModel)]="email" name="email" placeholder="tucorreo@dominio.cl"></ion-input>
+            <ion-icon name="mail-outline"></ion-icon>
+          </ion-item>
+
+          <ion-item>
+            <ion-input type="password" [(ngModel)]="password" name="password" placeholder="tu contrasennia"></ion-input>
+            <ion-icon name="lock-closed-outline"></ion-icon>
+          </ion-item>
+        </div>
+
+        <div class="recuperar-pass">
+          <ion-button fill="clear" class="btn-recuperar" (click)="IrAlrecuperar()">Olvidaste tu contraseña?</ion-button>
+        </div>
+        <div class="iniciar-btns">
+          <ion-button type="submit" class="inicarbtn">Iniciar</ion-button>
+        </div>
+      </form>
+    </ion-card-content>
+    <div class="ion-card-footer" #cardfooter>
+      <span class="text-footer">Aun no tienes tu cuenta?</span>
+      <button (click)="IrAlregistro()" class="btn-crear" routerLink="main-login/registro">Registrate aqui!</button>
+    </div>
+  </ion-card>
+</ion-content>
