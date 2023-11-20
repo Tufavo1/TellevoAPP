@@ -4,6 +4,8 @@ import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { AlertController, NavController, PopoverController, ToastController } from '@ionic/angular';
 import { AuthService } from 'src/app/services/authentication/auth.service';
 import { PopoverComponent } from '../register-vehicle/popover/popover.component';
+import { FirestoreService } from 'src/app/services/firebase/store/firestore.service';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
 
 @Component({
   selector: 'app-profile',
@@ -29,6 +31,8 @@ export class ProfilePage implements OnInit {
     private router: Router,
     private alertController: AlertController,
     private popoverController: PopoverController,
+    private firestoreService: FirestoreService,
+    private afAuth: AngularFireAuth,
   ) {
     this.userData = this.authService.obtenerDatosUsuarioRegistradoPorEmail();
 
@@ -170,5 +174,59 @@ export class ProfilePage implements OnInit {
 
   registrarVehiculo() {
     this.navCtrl.navigateForward('main-drive/register-vehicle')
+  }
+
+  async eliminarCuenta() {
+    try {
+      // Mostrar mensaje de confirmación
+      const confirmAlert = await this.alertController.create({
+        header: 'Confirmación',
+        message: '¿Estás seguro que quieres eliminar tu cuenta?',
+        buttons: [
+          {
+            text: 'No quiero eliminar',
+            role: 'cancel',
+            handler: () => {
+              console.log('Cancelado');
+            }
+          },
+          {
+            text: 'Sí, Quiero Eliminar mi cuenta',
+            handler: async () => {
+              // Obtener el usuario actualmente autenticado
+              const currentUser = this.authService.obtenerDatosUsuarioLogueado() || this.authService.obtenerDatosUsuarioRegistradoPorEmail();
+
+              if (currentUser && currentUser.email) {
+                // Eliminar datos del usuario de los collections en Firestore
+                await this.firestoreService.eliminarDatosUsuario(currentUser.email);
+
+                // Obtener el usuario actual en Firebase Authentication
+                const user = await this.afAuth.currentUser;
+
+                // Verificar si el usuario está autenticado en Firebase Authentication
+                if (user) {
+                  // Eliminar usuario de Firebase Authentication
+                  await user.delete();
+                }
+
+                // Cerrar sesión y redirigir a la página de inicio de sesión
+                await this.authService.cerrarSesion();
+              } else {
+                // Manejar el caso donde no se puede obtener el usuario actual ni por email registrado
+                console.error('No se pudo obtener información del usuario para eliminar la cuenta.');
+
+                // Aquí puedes agregar lógica adicional, como mostrar un mensaje al usuario
+                this.mostrarMensajeError('No se pudo encontrar información del usuario.');
+              }
+            }
+          }
+        ]
+      });
+
+      await confirmAlert.present();
+    } catch (error) {
+      // Aqui manejare el error en caso que algo salga mal
+      console.error('Error al eliminar la cuenta:', error);
+    }
   }
 }

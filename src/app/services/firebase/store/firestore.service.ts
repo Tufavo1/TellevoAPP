@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { Firestore, collection, addDoc, query, where, getDocs, QuerySnapshot, DocumentData } from '@angular/fire/firestore';
+import { Firestore, collection, addDoc, query, where, getDocs, QuerySnapshot, DocumentData, deleteDoc } from '@angular/fire/firestore';
 import { AlertController } from '@ionic/angular';
 import { Observable } from 'rxjs';
 
@@ -139,14 +139,6 @@ export class FirestoreService {
 
         await addDoc(resumenCompraCollection, resumenCompra);
         console.log('Resumen de compra guardado en Firestore con éxito.');
-
-        const localStorageKey = `resumenCompra`;
-        localStorage.setItem(localStorageKey, JSON.stringify(resumenCompra));
-        console.log('Resumen de compra guardado en localStorage con éxito.');
-      } else {
-        console.log(
-          'Usuario no autenticado. No se puede agregar el resumen de compra.'
-        );
       }
     } catch (error) {
       console.error(
@@ -172,5 +164,33 @@ export class FirestoreService {
           observer.error(error);
         });
     });
+  }
+
+  async eliminarDatosUsuario(email: string) {
+    try {
+      // Eliminar vehículo del collection 'regvehiculos'
+      const vehiculoQuery = query(collection(this.firestore, 'regvehiculos'), where('propietario', '==', email));
+      const vehiculoSnapshot = await getDocs(vehiculoQuery);
+      vehiculoSnapshot.forEach(async (doc) => {
+        await deleteDoc(doc.ref);
+      });
+
+      // Eliminar resumen de compra del collection 'resumenesCompra'
+      const resumenCompraQuery = query(collection(this.firestore, 'resumenesCompra'), where('titularPago', '==', email));
+      const resumenCompraSnapshot = await getDocs(resumenCompraQuery);
+      resumenCompraSnapshot.forEach(async (doc) => {
+        await deleteDoc(doc.ref);
+      });
+
+      // Eliminar usuario del collection 'usuarios'
+      const usuarioQuery = query(collection(this.firestore, 'usuarios'), where('email', '==', email));
+      const usuarioSnapshot = await getDocs(usuarioQuery);
+      usuarioSnapshot.forEach(async (doc) => {
+        await deleteDoc(doc.ref);
+      });
+    } catch (error) {
+      console.error('Error al eliminar datos del usuario:', error);
+      throw error;
+    }
   }
 }

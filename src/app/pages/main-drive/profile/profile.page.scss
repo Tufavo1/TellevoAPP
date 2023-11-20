@@ -132,14 +132,31 @@ ion-content {
                 display: flex;
                 flex-direction: column;
                 align-items: center;
+                margin-top: 10px;
+                margin-bottom: 10px;
             }
 
             .btn-change {
-                width: 50%;
+                margin-right: 10px;
+                width: 60%;
                 --background: linear-gradient(90deg, #00CCFF, #FF00CC);
             }
 
             .btn-change:hover {
+                --background: #fff;
+                color: #000;
+            }
+
+            .btn-eliminar {
+                flex-direction: column;
+                display: flex;
+                align-items: center;
+                margin: 0 auto;
+                width: 60%;
+                --background: #FF0000;
+            }
+
+            .btn-eliminar:hover {
                 --background: #fff;
                 color: #000;
             }

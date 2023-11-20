@@ -1,7 +1,7 @@
 <ion-header>
     <div class="btn-container">
         <ion-button class="btn-menu" (click)="registrarVehiculo()">
-            registrar mi vehiculo
+            registrar mi vehiculo<ion-icon name="car-sport-outline"></ion-icon>
         </ion-button>
     </div>
 </ion-header>
@@ -12,12 +12,12 @@
         <div class="capture-container">
             <ion-img class="view-photo" [src]="userData.fotoTomada" alt="Foto del usuario"></ion-img>
             <ion-button class="btn-editar" expand="full" (click)="cambiarImagen()">
-                Cambiar Imagen
+                Cambiar Imagen <ion-icon name="camera-outline"></ion-icon>
             </ion-button>
         </div>
         <ion-card-content class="ion-padding">
             <ion-card-header>
-                <ion-card-title>Datos Personales</ion-card-title>
+                <ion-card-title>Datos Personales<ion-icon name="person-sharp"></ion-icon></ion-card-title>
             </ion-card-header>
             <ion-list>
                 <ion-item>
@@ -51,7 +51,8 @@
 
                 <div class="container-btn-edit">
                     <ion-button class="btn-change" (click)="activarEdicion()"
-                        *ngIf="!editMode && !guardandoCambios && !cambiosRealizados">Editar Perfil</ion-button>
+                        *ngIf="!editMode && !guardandoCambios && !cambiosRealizados">Editar Perfil <ion-icon
+                            name="create-outline"></ion-icon></ion-button>
 
                     <ion-button class="btn-change guardar" (click)="guardarCambios()"
                         *ngIf="editMode && cambiosRealizados">Guardar</ion-button>
@@ -59,8 +60,9 @@
                     <ion-button class="btn-change cancelar" (click)="cancelarEdicion()"
                         *ngIf="editMode || guardandoCambios">Cancelar</ion-button>
                 </div>
+                <ion-button class="btn-eliminar" (click)="eliminarCuenta()">Eliminar Cuenta<ion-icon
+                        name="trash-outline"></ion-icon></ion-button>
             </ion-list>
-
         </ion-card-content>
     </ion-card>
 </ion-content>
