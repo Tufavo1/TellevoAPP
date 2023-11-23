@@ -1,14 +1,21 @@
 <ion-header>
-    <div class="btn-container">
-        <ion-button class="btn-menu" (click)="registrarVehiculo()">
-            registrar mi vehiculo<ion-icon name="car-sport-outline"></ion-icon>
+    <ion-toolbar>
+        <ion-button *ngIf="!tieneVehiculo" class="btn-registro" (click)="registrarVehiculo()">
+            Registrar mi vehículo<ion-icon name="car-sport-outline"></ion-icon>
         </ion-button>
-    </div>
+
+        <ion-button *ngIf="tieneVehiculo" class="btn-ver-datos" (click)="verDatosVehiculo()">
+            Ver datos de mi vehículo<ion-icon name="car-sport-outline"></ion-icon>
+        </ion-button>
+    </ion-toolbar>
 </ion-header>
 
 <ion-content class="fullscreen-bg">
     <div class="background-image"></div>
     <ion-card>
+        <ion-card-header>
+            <ion-title>Foto De Perfil<ion-icon name="person-sharp"></ion-icon></ion-title>
+        </ion-card-header>
         <div class="capture-container">
             <ion-img class="view-photo" [src]="userData.fotoTomada" alt="Foto del usuario"></ion-img>
             <ion-button class="btn-editar" expand="full" (click)="cambiarImagen()">

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { Firestore, collection, addDoc, query, where, getDocs, QuerySnapshot, DocumentData, deleteDoc } from '@angular/fire/firestore';
+import { Firestore, collection, addDoc, query, where, getDocs, QuerySnapshot, DocumentData, deleteDoc, doc } from '@angular/fire/firestore';
 import { AlertController } from '@ionic/angular';
 import { Observable } from 'rxjs';
 
@@ -79,6 +79,7 @@ export class FirestoreService {
 
         } else {
           await addDoc(collection(this.firestore, 'regvehiculos'), datosVehiculo);
+          window.location.reload();
         }
       }
     }
@@ -125,6 +126,69 @@ export class FirestoreService {
           observer.error(error);
         });
     });
+  }
+
+  async mostrarAlertaConfirmacion(): Promise<boolean> {
+    return new Promise(async (resolve) => {
+      const alert = await this.alertController.create({
+        header: 'Confirmación',
+        message: '¿Estás seguro de que quieres eliminar tu vehículo?',
+        buttons: [
+          {
+            text: 'No',
+            role: 'cancel',
+            handler: () => resolve(false),
+          },
+          {
+            text: 'Sí',
+            handler: () => resolve(true),
+          },
+        ],
+      });
+
+      await alert.present();
+    });
+  }
+
+  async eliminarVehiculo() {
+    const user = await this.afAuth.currentUser;
+
+    if (user) {
+      const confirmacion = await this.mostrarAlertaConfirmacion();
+
+      if (!confirmacion) {
+        return; // El usuario seleccionó "No", cancelar la eliminación.
+      }
+
+      const userEmail = user.email;
+
+      try {
+        // Obtener el documento del vehículo del usuario actual
+        const vehiculoQuery = query(collection(this.firestore, 'regvehiculos'), where('propietario', '==', userEmail));
+        const vehiculoSnapshot = await getDocs(vehiculoQuery);
+
+        if (vehiculoSnapshot.size > 0) {
+          const vehiculoDoc = vehiculoSnapshot.docs[0];
+
+          // Eliminar el documento del vehículo
+          await deleteDoc(doc(this.firestore, 'regvehiculos', vehiculoDoc.id));
+
+          this.mostrarAlerta('¡Éxito!', 'Vehículo eliminado exitosamente.');
+
+          // Recargar la página después de la eliminación
+          window.location.reload();
+        } else {
+          this.mostrarAlerta('¡Error!', 'No se encontró el vehículo para eliminar.');
+        }
+      } catch (error) {
+        console.error('Error al eliminar el vehículo', error);
+        this.mostrarAlerta('¡Error!', 'Ocurrió un error al intentar eliminar el vehículo.');
+      }
+    }
+  }
+
+  getAuthInstance() {
+    return this.afAuth;
   }
 
   async agregarResumenCompra(resumenCompra: any) {

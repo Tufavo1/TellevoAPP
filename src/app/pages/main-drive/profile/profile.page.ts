@@ -23,6 +23,7 @@ export class ProfilePage implements OnInit {
   guardandoCambios = false;
   cambiosRealizados = false;
   estadoOriginal: any;
+  tieneVehiculo: boolean = false;
 
   constructor(
     private navCtrl: NavController,
@@ -38,43 +39,33 @@ export class ProfilePage implements OnInit {
 
   }
 
-  // Función para activar el modo de edición
   activarEdicion() {
     this.editMode = true;
-
-    // Guarda una copia del estado actual para revertir cambios si se cancela
     this.estadoOriginal = { ...this.userData };
   }
 
-  // Función para guardar los cambios
   guardarCambios() {
-    // Lógica para guardar los cambios en Firebase o donde sea necesario
     this.guardandoCambios = true;
 
-    // Simulación de una operación asíncrona
     setTimeout(() => {
       this.guardandoCambios = false;
       this.editMode = false;
       this.cambiosRealizados = false;
-      this.estadoOriginal = null; // Resetea el estado original después de guardar
-    }, 2000); // Simula una operación que dura 2 segundos
+      this.estadoOriginal = null;
+    }, 2000);
   }
 
-  // Función para cancelar la edición
   cancelarEdicion() {
-    // Si se realizaron cambios, revertir al estado original
     if (this.cambiosRealizados) {
       this.userData = { ...this.estadoOriginal };
     }
 
     this.editMode = false;
     this.cambiosRealizados = false;
-    this.estadoOriginal = null; // Resetea el estado original después de cancelar
+    this.estadoOriginal = null;
   }
 
-  // Función para detectar cambios en los campos
   onCampoCambiado() {
-    // Puedes agregar lógica adicional aquí según tus necesidades
     this.cambiosRealizados = true;
   }
 
@@ -91,13 +82,28 @@ export class ProfilePage implements OnInit {
     if (!this.userData) {
       const registeredUserData = this.authService.obtenerDatosUsuarioRegistradoPorEmail();
 
-      // Asigna los datos del registro a userData
       if (registeredUserData) {
         this.userData = registeredUserData;
       }
     }
+    this.verificarVehiculoRegistrado();
   }
 
+  async verificarVehiculoRegistrado() {
+    const user = await this.firestoreService.getAuthInstance().currentUser;
+
+    if (user) {
+      const userEmail = user.email;
+
+      if (userEmail) {
+        const vehiculoData = await this.firestoreService.obtenerDatosDelVehiculo(userEmail);
+
+        if (vehiculoData) {
+          this.tieneVehiculo = true;
+        }
+      }
+    }
+  }
 
   volverPaginaAnterior() {
     this.navCtrl.navigateForward('main-drive/main');
@@ -173,6 +179,10 @@ export class ProfilePage implements OnInit {
   }
 
   registrarVehiculo() {
+    this.navCtrl.navigateForward('main-drive/register-vehicle')
+  }
+
+  verDatosVehiculo() {
     this.navCtrl.navigateForward('main-drive/register-vehicle')
   }
 

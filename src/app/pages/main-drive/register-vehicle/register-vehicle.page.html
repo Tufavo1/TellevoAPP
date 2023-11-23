@@ -65,7 +65,8 @@
             <ion-input id="costo" [value]="vehiculoExistente?.costo"
               [disabled]="vehiculoExistente !== null">Costo</ion-input>
           </ion-item>
-
+          <ion-button class="btn-eliminar" (click)="eliminarVehiculo()">Eliminar Cuenta<ion-icon
+              name="trash-outline"></ion-icon></ion-button>
         </ion-list>
       </ion-card-content>
     </ion-card>
@@ -137,7 +138,7 @@
           </ion-item>
 
           <div class="btn-register">
-            <ion-button shape="round" fill="solid" class="registerbtn" (click)="mostrarMensajeConfirmacion()">Registrar
+            <ion-button shape="round" fill="solid" class="btn-registro" (click)="mostrarMensajeConfirmacion()">Registrar
               Vehículo</ion-button>
           </div>
         </ion-list>

@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
 })
 export class RegisterVehiclePage implements OnInit {
   //variables
-  userImage!: string;
+  userImage!: Blob;
   userData: any = {};
   fotoTomada: string | undefined = '';
   vehiculoExistente: any;
@@ -73,8 +73,6 @@ export class RegisterVehiclePage implements OnInit {
     this.cargando = false;
   }
 
-
-
   navigateToHome() {
     this.navCtrl.navigateForward('/home');
   }
@@ -92,7 +90,7 @@ export class RegisterVehiclePage implements OnInit {
   }
 
   volverPaginaAnterior() {
-    this.navCtrl.navigateForward('main-drive/main');
+    this.navCtrl.navigateForward('main-drive/profile');
   }
 
   async tomarFoto() {
@@ -261,5 +259,9 @@ export class RegisterVehiclePage implements OnInit {
       const user = JSON.parse(userData);
       this.userImage = user.fotoTomada;
     }
+  }
+
+  eliminarVehiculo() {
+    this.firestoreService.eliminarVehiculo();
   }
 }  
