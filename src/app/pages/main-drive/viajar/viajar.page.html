@@ -6,18 +6,20 @@
   </div>
 
   <div class="fixed-search">
-    <ion-searchbar placeholder="Buscar"></ion-searchbar>
+    <ion-searchbar placeholder="Buscar" (ionChange)="onSearchChange($event)"></ion-searchbar>
   </div>
+
 
 </ion-header>
 
-<ion-content>
+<ion-content class="fullscreen-bg" #Content>
   <div class="background-image"></div>
   <ng-container *ngIf="loaded; else loadingContent">
     <ion-list>
       <h1 title="title">Selecciona un vehiculo, paga y disfruta de un buen Viaje.</h1>
-      <ion-item *ngFor="let vehiculo of vehiculosRegistrados">
-        <ion-button class="btn-item" expand="full" (click)="realizarPago(vehiculo)">
+      <ion-item class="container-btn" *ngFor="let vehiculo of vehiculosRegistrados">
+        <ion-button class="btn-item" expand="full" *ngIf="matchDestination(vehiculo.destino)"
+          (click)="realizarPago(vehiculo)">
           <ion-avatar slot="start">
             <ion-icon name="car-outline"></ion-icon>
           </ion-avatar>
@@ -52,7 +54,7 @@
   </ng-template>
 </ion-content>
 
-<div class="menu-navigation">
+<div class="menu-navigation" #MainNavigation>
   <ion-buttons class="container-button">
     <ion-button (click)="volverPaginaAnterior()">
       <ion-icon class="back" name="arrow-back-circle-outline"></ion-icon>

@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
-import { AlertController, NavController, PopoverController, ToastController } from '@ionic/angular';
-import { PopoverComponent } from './popover/popover.component';
+import { AlertController, AnimationController, NavController, PopoverController, ToastController } from '@ionic/angular';
 import { FirestoreService } from 'src/app/services/firebase/store/firestore.service';
 import { AuthService } from 'src/app/services/authentication/auth.service';
 import { Router } from '@angular/router';
@@ -36,7 +35,41 @@ export class RegisterVehiclePage implements OnInit {
     private toastController: ToastController,
     private router: Router,
     private alertController: AlertController,
+    private animationCtrl: AnimationController
+
   ) { }
+
+  ionViewDidEnter() {
+    this.realizarAnimacionEntrada();
+  }
+
+  realizarAnimacionEntrada() {
+    const contentElement = document.querySelector('#Content');
+    if (contentElement) {
+      const animation = this.animationCtrl
+        .create()
+        .addElement(contentElement)
+        .duration(500)
+        .fromTo('opacity', 0, 1)
+        .fromTo('transform', 'translateY(20px)', 'translateY(0)');
+
+      animation.play();
+    }
+  }
+
+  realizarAnimacionSalida() {
+    const contentElement = document.querySelector('#Content');
+    if (contentElement) {
+      const animation = this.animationCtrl
+        .create()
+        .addElement(contentElement)
+        .duration(500)
+        .fromTo('opacity', 1, 0)
+        .fromTo('transform', 'translateY(0)', 'translateY(20px)');
+
+      animation.play();
+    }
+  }
 
   mostrarCarga() {
     this.cargando = true;
@@ -46,14 +79,6 @@ export class RegisterVehiclePage implements OnInit {
     this.cargando = false;
   }
 
-  async presentPopover(event: any) {
-    const popover = await this.popoverController.create({
-      component: PopoverComponent,
-      event: event,
-      translucent: true
-    });
-    return await popover.present();
-  }
 
   async ngOnInit() {
     this.vehiculoExistente = null;
@@ -73,24 +98,9 @@ export class RegisterVehiclePage implements OnInit {
     this.cargando = false;
   }
 
-  navigateToHome() {
-    this.navCtrl.navigateForward('/home');
-  }
-
-  navigateTohelp() {
-    this.navCtrl.navigateForward('/twitter');
-  }
-
-  navigateTosettings() {
-    this.navCtrl.navigateForward('/notifications');
-  }
-
-  navigateToUserProfile() {
-    this.navCtrl.navigateForward('/profile');
-  }
-
   volverPaginaAnterior() {
     this.navCtrl.navigateForward('main-drive/profile');
+    this.realizarAnimacionSalida();
   }
 
   async tomarFoto() {
@@ -113,7 +123,7 @@ export class RegisterVehiclePage implements OnInit {
   }
 
   async mostrarMensajeConfirmacion() {
-    // Define un mensaje de error para campos faltantes.
+    // Aqui Defino un mensaje error para validar los campos vacios.
     let mensajeError = '';
 
     const nombre = (document.getElementById('nombreDuenio') as HTMLInputElement).value;
@@ -126,7 +136,7 @@ export class RegisterVehiclePage implements OnInit {
     const costo = (document.getElementById('costo') as HTMLInputElement).value;
 
 
-    // Verifica cada campo y agrega al mensaje de error si es necesario.
+    // Aqui se verifica cada campo y que se le agregue el mensaje de error en caso que esten vacios.
     if (!nombre) {
       mensajeError += 'Nombre, ';
     }
@@ -152,9 +162,9 @@ export class RegisterVehiclePage implements OnInit {
       mensajeError += 'Ingresar el costo de la siguiente manera: $ 12.000 ';
     }
 
-    // Si hay campos faltantes, muestra un mensaje de error.
+    // Si hay campos faltantes, que se muestre un mensaje de error.
     if (mensajeError) {
-      mensajeError = mensajeError.slice(0, -2); // Elimina la última coma y espacio.
+      mensajeError = mensajeError.slice(0, -2);
       const toast = await this.toastController.create({
         message: `Por favor, llena los siguientes campos: ${mensajeError}`,
         duration: 10000,
@@ -171,11 +181,11 @@ export class RegisterVehiclePage implements OnInit {
         ],
       });
       toast.present();
-      return; // Detén la ejecución si faltan campos.
+      //En caso que faltan campos por llenar que detenga la ejecucion
+      return;
     }
 
-    // Si todos los campos están llenos, puedes continuar con la lógica de registro del vehículo aquí.
-    // Añade la lógica para registrar el vehículo en Firestore o donde sea necesario.
+    // Si todos los campos estan completos, se puede continuar con la logica del registro del vehiculo en el firestore.
     const userRegistrado = this.authService.obtenerDatosUsuarioRegistradoPorEmail();
     const userLogueado = this.authService.obtenerDatosUsuarioLogueado();
 
@@ -231,26 +241,22 @@ export class RegisterVehiclePage implements OnInit {
     });
 
     await alert.present();
+    this.realizarAnimacionSalida();
   }
 
   cerrarSesion() {
     this.authService.cerrarSesion()
-      .then(() => {
-        this.router.navigate(['/login']);
-      })
-      .catch(error => {
-        console.error('Error al cerrar sesión: ', error);
-      });
   }
 
   mostrarHistorial() {
     this.navCtrl.navigateForward('main-drive/history-drive')
-    console.log('Se ha hecho clic en historial');
+    this.realizarAnimacionSalida();
   }
 
   abrirPerfil() {
     this.cargarImagenUsuario();
     this.navCtrl.navigateForward('main-drive/profile')
+    this.realizarAnimacionSalida();
   }
 
   cargarImagenUsuario() {

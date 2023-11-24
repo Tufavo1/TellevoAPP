@@ -258,6 +258,21 @@ ion-content {
         border-radius: 50px;
         color: #000;
     }
+
+    .btn-eliminar {
+        flex-direction: column;
+        display: flex;
+        align-items: center;
+        margin: 0 auto;
+        width: 60%;
+        --background: #FF0000;
+    }
+
+    .btn-eliminar:hover {
+        --background: #fff;
+        border-radius: 50px;
+        color: #000;
+    }
 }
 
 .menu-navigation {

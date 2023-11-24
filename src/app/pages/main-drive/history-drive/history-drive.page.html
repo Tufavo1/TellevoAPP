@@ -1,20 +1,20 @@
 <ion-header>
-  <div class="fixed-profile" (click)="abrirPerfil()">
+  <div class="fixed-profile" (click)="abrirPerfil()" #Profile>
     <ion-button fill="clear">
       <ion-img [src]="userImage" alt="Tu perfil"></ion-img>
     </ion-button>
   </div>
 </ion-header>
 
-<ion-content>
+<ion-content class="fullscreen-bg" #Content>
   <div class="background-image"></div>
-  <h1>Historial de Servicios</h1>
   <div *ngIf="isLoading" class="loading-overlay">
     <div class="loading-spinner"></div>
     <h3>Buscando Datos del Historial</h3>
   </div>
 
   <div class="container-history" *ngIf="historialCompras.length > 0">
+    <h2 class="titulo">Historial De Compras <ion-icon name="card-outline"></ion-icon></h2>
     <ion-list>
       <table>
         <thead>
@@ -38,14 +38,18 @@
   </div>
 
   <div class="container-no-history" *ngIf="historialCompras.length === 0 && !isLoading">
+    <h2 class="titulo">Historial De Compras <ion-icon name="card-outline"></ion-icon></h2>
     <ion-note>
+      <h4>Aqui apareceran todos los Datos de los vehiculos que has solicitado y pagado.</h4>
       No hay historial de compras.
+      <ion-icon name="wallet-outline"></ion-icon>
     </ion-note>
+
   </div>
 </ion-content>
 
 
-<div class="menu-navigation">
+<div class="menu-navigation" #MainNavigation>
   <ion-buttons class="container-button">
     <ion-button (click)="volverPaginaAnterior()">
       <ion-icon class="back" name="arrow-back-circle-outline"></ion-icon>

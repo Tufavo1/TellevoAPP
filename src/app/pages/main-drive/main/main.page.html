@@ -1,18 +1,18 @@
 <ion-header>
-  <div class="container-Popover">
-    <ion-button (click)="presentPopover($event)">
+  <div class="container-Popover" #PopOver>
+    <ion-button (click)="abrirMenu()">
       <ion-icon name="menu"></ion-icon>
     </ion-button>
   </div>
 
-  <div class="fixed-profile" (click)="abrirPerfil()">
+  <div class="fixed-profile" (click)="abrirPerfil()" #ImgPreview>
     <ion-button fill="clear">
       <ion-img [src]="userImage" alt="Tu perfil"></ion-img>
     </ion-button>
   </div>
 </ion-header>
 
-<ion-content #main>
+<ion-content #Content>
   <div class="background-image"></div>
   <div class="container-geolocalizacion">
     <div class="localizacion">
@@ -59,7 +59,7 @@
   </div>
 </ion-content>
 
-<div class="menu-navigation">
+<div class="menu-navigation" #MainNavigation>
   <ion-buttons class="container-button">
     <ion-button>
       <ion-icon name="home"></ion-icon>

@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
-import { AlertController, NavController, PopoverController, ToastController } from '@ionic/angular';
+import { AlertController, AnimationController, NavController, PopoverController, ToastController } from '@ionic/angular';
 import { AuthService } from 'src/app/services/authentication/auth.service';
-import { PopoverComponent } from '../register-vehicle/popover/popover.component';
 import { FirestoreService } from 'src/app/services/firebase/store/firestore.service';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 
@@ -29,14 +27,46 @@ export class ProfilePage implements OnInit {
     private navCtrl: NavController,
     private toastController: ToastController,
     private authService: AuthService,
-    private router: Router,
     private alertController: AlertController,
     private popoverController: PopoverController,
     private firestoreService: FirestoreService,
     private afAuth: AngularFireAuth,
+    private animationCtrl: AnimationController
   ) {
     this.userData = this.authService.obtenerDatosUsuarioRegistradoPorEmail();
 
+  }
+
+  ionViewDidEnter() {
+    this.realizarAnimacionEntrada();
+  }
+
+  realizarAnimacionEntrada() {
+    const contentElement = document.querySelector('#Content');
+    if (contentElement) {
+      const animation = this.animationCtrl
+        .create()
+        .addElement(contentElement)
+        .duration(500)
+        .fromTo('opacity', 0, 1)
+        .fromTo('transform', 'translateY(20px)', 'translateY(0)');
+
+      animation.play();
+    }
+  }
+
+  realizarAnimacionSalida() {
+    const contentElement = document.querySelector('#Content');
+    if (contentElement) {
+      const animation = this.animationCtrl
+        .create()
+        .addElement(contentElement)
+        .duration(500)
+        .fromTo('opacity', 1, 0)
+        .fromTo('transform', 'translateY(0)', 'translateY(20px)');
+
+      animation.play();
+    }
   }
 
   activarEdicion() {
@@ -69,15 +99,6 @@ export class ProfilePage implements OnInit {
     this.cambiosRealizados = true;
   }
 
-  async presentPopover(event: any) {
-    const popover = await this.popoverController.create({
-      component: PopoverComponent,
-      event: event,
-      translucent: true
-    });
-    return await popover.present();
-  }
-
   ngOnInit() {
     if (!this.userData) {
       const registeredUserData = this.authService.obtenerDatosUsuarioRegistradoPorEmail();
@@ -107,11 +128,12 @@ export class ProfilePage implements OnInit {
 
   volverPaginaAnterior() {
     this.navCtrl.navigateForward('main-drive/main');
+    this.realizarAnimacionSalida();
   }
 
   mostrarHistorial() {
     this.navCtrl.navigateForward('main-drive/history-drive')
-    console.log('Se ha hecho clic en historial');
+    this.realizarAnimacionSalida();
   }
 
   cambiarImagen() {
@@ -166,29 +188,26 @@ export class ProfilePage implements OnInit {
     });
 
     await alert.present();
+    this.realizarAnimacionSalida();
   }
 
   cerrarSesion() {
     this.authService.cerrarSesion()
-      .then(() => {
-        this.router.navigate(['/login']);
-      })
-      .catch(error => {
-        console.error('Error al cerrar sesión: ', error);
-      });
   }
 
   registrarVehiculo() {
     this.navCtrl.navigateForward('main-drive/register-vehicle')
+    this.realizarAnimacionSalida();
   }
 
   verDatosVehiculo() {
     this.navCtrl.navigateForward('main-drive/register-vehicle')
+    this.realizarAnimacionSalida();
   }
 
   async eliminarCuenta() {
     try {
-      // Mostrar mensaje de confirmación
+      //Aqui hago un mensaje de confirmacion
       const confirmAlert = await this.alertController.create({
         header: 'Confirmación',
         message: '¿Estás seguro que quieres eliminar tu cuenta?',
@@ -203,36 +222,34 @@ export class ProfilePage implements OnInit {
           {
             text: 'Sí, Quiero Eliminar mi cuenta',
             handler: async () => {
-              // Obtener el usuario actualmente autenticado
+              // Esta constante obtiene el usuario logeado del local storage loggedUser
               const currentUser = this.authService.obtenerDatosUsuarioLogueado() || this.authService.obtenerDatosUsuarioRegistradoPorEmail();
-
+              //Si 
               if (currentUser && currentUser.email) {
-                // Eliminar datos del usuario de los collections en Firestore
+                // El usuario dice que si entonces que elimine los datos del usuario del firestore
                 await this.firestoreService.eliminarDatosUsuario(currentUser.email);
 
-                // Obtener el usuario actual en Firebase Authentication
+                // y nuevamente que obtenga el usuario actual del auth y en el firestore
                 const user = await this.afAuth.currentUser;
 
-                // Verificar si el usuario está autenticado en Firebase Authentication
+                // Si se verifica si el usuario esta autenticado
                 if (user) {
-                  // Eliminar usuario de Firebase Authentication
+                  // Elimine al usuario del firebase auth
                   await user.delete();
                 }
 
-                // Cerrar sesión y redirigir a la página de inicio de sesión
+                // Y que cierrre sesion y lo rediriga a la pagina de login
                 await this.authService.cerrarSesion();
+                //si hay algun error los manejare asi
               } else {
-                // Manejar el caso donde no se puede obtener el usuario actual ni por email registrado
-                console.error('No se pudo obtener información del usuario para eliminar la cuenta.');
-
-                // Aquí puedes agregar lógica adicional, como mostrar un mensaje al usuario
-                this.mostrarMensajeError('No se pudo encontrar información del usuario.');
+                // Usare un console log "error" para ver que hubo un problema al eliminar el usuario
+                console.error('No se pudo obtener datos del usuario para eliminar la cuenta.');
               }
             }
           }
         ]
       });
-
+      //Y este estara esperando la interaccion del usuario en caso de si o no
       await confirmAlert.present();
     } catch (error) {
       // Aqui manejare el error en caso que algo salga mal

@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { AlertController, IonicModule, NavController, PopoverController } from '@ionic/angular';
+import { AlertController, AnimationController, IonicModule, MenuController, NavController, PopoverController } from '@ionic/angular';
 import { BannerComponent } from './banner/banner.component';
 import { DataService } from 'src/app/services/shared-data/data.service';
 import { Geolocation } from '@capacitor/geolocation';
-import { PopoverComponent } from '../register-vehicle/popover/popover.component';
 import { AuthService } from 'src/app/services/authentication/auth.service';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-main',
@@ -31,21 +29,48 @@ export class MainPage implements OnInit {
   constructor(
     private dataService: DataService,
     private navCtrl: NavController,
-    private popoverController: PopoverController,
     private alertController: AlertController,
     private authService: AuthService,
-    private router: Router,
+    private animationCtrl: AnimationController,
+    private menuController: MenuController
   ) {
     this.cargarImagenUsuario();
   }
 
-  async presentPopover(event: any) {
-    const popover = await this.popoverController.create({
-      component: PopoverComponent,
-      event: event,
-      translucent: true
-    });
-    return await popover.present();
+  abrirMenu() {
+    this.menuController.open('nombreDelMenu');
+  }
+
+  ionViewDidEnter() {
+    this.realizarAnimacionEntrada();
+  }
+
+  realizarAnimacionEntrada() {
+    const contentElement = document.querySelector('#Content');
+    if (contentElement) {
+      const animation = this.animationCtrl
+        .create()
+        .addElement(contentElement)
+        .duration(500)
+        .fromTo('opacity', 0, 1)
+        .fromTo('transform', 'translateY(20px)', 'translateY(0)');
+
+      animation.play();
+    }
+  }
+
+  realizarAnimacionSalida() {
+    const contentElement = document.querySelector('#Content');
+    if (contentElement) {
+      const animation = this.animationCtrl
+        .create()
+        .addElement(contentElement)
+        .duration(500)
+        .fromTo('opacity', 1, 0)
+        .fromTo('transform', 'translateY(0)', 'translateY(20px)');
+
+      animation.play();
+    }
   }
 
   async ngOnInit(): Promise<void> {
@@ -75,11 +100,13 @@ export class MainPage implements OnInit {
   buscarViaje() {
     this.navCtrl.navigateForward('main-drive/viajar')
     console.log('Se ha hecho clic en Buscar Viaje');
+    this.realizarAnimacionSalida();
   }
 
   abrirPerfil() {
     this.cargarImagenUsuario();
     this.navCtrl.navigateForward('main-drive/profile')
+    this.realizarAnimacionSalida();
   }
 
   cargarImagenUsuario() {
@@ -93,6 +120,7 @@ export class MainPage implements OnInit {
   mostrarHistorial() {
     this.navCtrl.navigateForward('main-drive/history-drive')
     console.log('Se ha hecho clic en historial');
+    this.realizarAnimacionSalida();
   }
 
   async mostrarConfirmacionCerrarSesion() {
@@ -117,15 +145,12 @@ export class MainPage implements OnInit {
     });
 
     await alert.present();
+
+    this.realizarAnimacionSalida();
+
   }
 
   cerrarSesion() {
     this.authService.cerrarSesion()
-      .then(() => {
-        this.router.navigate(['/login']);
-      })
-      .catch(error => {
-        console.error('Error al cerrar sesión: ', error);
-      });
   }
 }

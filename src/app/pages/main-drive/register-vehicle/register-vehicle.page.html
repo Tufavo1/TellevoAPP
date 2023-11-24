@@ -1,18 +1,16 @@
 <ion-header>
-  <div class="container-Popover">
-    <ion-button (click)="presentPopover($event)">
-      <ion-icon name="menu"></ion-icon>
-    </ion-button>
+  <div class="container-Popover" #PopOver>
+
   </div>
 
-  <div class="fixed-profile" (click)="abrirPerfil()">
+  <div class="fixed-profile" (click)="abrirPerfil()" #Perfil>
     <ion-button fill="clear">
       <ion-img [src]="userImage" alt="Tu perfil"></ion-img>
     </ion-button>
   </div>
 </ion-header>
 
-<ion-content class="fullscreen-bg">
+<ion-content class="fullscreen-bg" #Content>
   <div class="background-image"></div>
   <div class="loading-overlay" *ngIf="cargando">
     <div class="loading-spinner"></div>
@@ -65,7 +63,7 @@
             <ion-input id="costo" [value]="vehiculoExistente?.costo"
               [disabled]="vehiculoExistente !== null">Costo</ion-input>
           </ion-item>
-          <ion-button class="btn-eliminar" (click)="eliminarVehiculo()">Eliminar Cuenta<ion-icon
+          <ion-button class="btn-eliminar" (click)="eliminarVehiculo()">Eliminar Vehiculo<ion-icon
               name="trash-outline"></ion-icon></ion-button>
         </ion-list>
       </ion-card-content>
@@ -147,7 +145,7 @@
   </ng-template>
 </ion-content>
 
-<div class="menu-navigation">
+<div class="menu-navigation" #MainNavigation>
   <ion-buttons class="container-button">
     <ion-button (click)="volverPaginaAnterior()">
       <ion-icon class="back" name="arrow-back-circle-outline"></ion-icon>

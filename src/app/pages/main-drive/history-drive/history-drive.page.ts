@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { Router } from '@angular/router';
-import { NavController, AlertController } from '@ionic/angular';
+import { NavController, AlertController, AnimationController } from '@ionic/angular';
 import { AuthService } from 'src/app/services/authentication/auth.service';
 import { FirestoreService } from 'src/app/services/firebase/store/firestore.service';
 
@@ -19,18 +18,50 @@ export class HistoryDrivePage implements OnInit {
   constructor(
     private firestoreService: FirestoreService,
     private afAuth: AngularFireAuth,
-    private router: Router,
     private navCtrl: NavController,
     private alertController: AlertController,
-    private authService: AuthService
+    private authService: AuthService,
+    private animationCtrl: AnimationController
   ) {
     this.cargarImagenUsuario();
 
   }
 
+  ionViewDidEnter() {
+    this.realizarAnimacionEntrada();
+  }
+
+  realizarAnimacionEntrada() {
+    const contentElement = document.querySelector('#Content');
+    if (contentElement) {
+      const animation = this.animationCtrl
+        .create()
+        .addElement(contentElement)
+        .duration(500)
+        .fromTo('opacity', 0, 1)
+        .fromTo('transform', 'translateY(20px)', 'translateY(0)');
+
+      animation.play();
+    }
+  }
+
+  realizarAnimacionSalida() {
+    const contentElement = document.querySelector('#Content');
+    if (contentElement) {
+      const animation = this.animationCtrl
+        .create()
+        .addElement(contentElement)
+        .duration(500)
+        .fromTo('opacity', 1, 0)
+        .fromTo('transform', 'translateY(0)', 'translateY(20px)');
+
+      animation.play();
+    }
+  }
+
   ngOnInit() {
     this.isLoading = true;
-    this.obtenerHistorialDesdeLocalStorageOFirestore();
+    this.obtenerHistorialDesdeFirestore();
   }
 
   cargarImagenUsuario() {
@@ -44,6 +75,7 @@ export class HistoryDrivePage implements OnInit {
   abrirPerfil() {
     this.cargarImagenUsuario();
     this.navCtrl.navigateForward('main-drive/profile')
+    this.realizarAnimacionSalida();
   }
 
   async mostrarConfirmacionCerrarSesion() {
@@ -68,92 +100,52 @@ export class HistoryDrivePage implements OnInit {
     });
 
     await alert.present();
+    this.realizarAnimacionSalida();
   }
 
   cerrarSesion() {
     this.authService.cerrarSesion()
-      .then(() => {
-        this.router.navigate(['/login']);
-      })
-      .catch(error => {
-        console.error('Error al cerrar sesión: ', error);
-      });
   }
 
   volverPaginaAnterior() {
     this.navCtrl.navigateForward('main-drive/main');
+    this.realizarAnimacionSalida();
   }
 
   mostrarHistorial() {
     this.navCtrl.navigateForward('main-drive/history-drive')
-    console.log('Se ha hecho clic en historial');
+    this.realizarAnimacionSalida();
   }
 
-
-  async obtenerHistorialDesdeLocalStorageOFirestore() {
+  async obtenerHistorialDesdeFirestore() {
     try {
       const user = await this.afAuth.currentUser;
 
       if (user) {
         const emailUsuario = user.email ?? '';
 
-        // Intenta obtener el historial desde el localStorage
-        const historialLocalStorage = localStorage.getItem('resumenCompra');
+        this.firestoreService.obtenerHistorialCompras(emailUsuario).subscribe((historial) => {
+          if (historial && historial.length > 0) {
+            this.historialCompras = historial.map((compra: any) => ({
+              ...compra,
+              fecha: this.formatearFecha(compra.fecha),
+              hora: this.formatearHora(compra.fecha)
+            }));
 
-        if (historialLocalStorage) {
-          try {
-            // Intenta parsear el historial como JSON
-            const historialParsed = JSON.parse(historialLocalStorage);
+            // Almacena el historial en el Local Storage
+            localStorage.setItem('HistorialCompras', JSON.stringify(historial));
 
-            // Verifica si el historialParsed es un array
-            if (Array.isArray(historialParsed)) {
-              // Si existe en el localStorage y es un array, úsalo
-              this.historialCompras = historialParsed.map((compra: any) => ({
-                ...compra,
-                fecha: this.formatearFecha(compra.fecha),
-                hora: this.formatearHora(compra.fecha)
-              }));
-              // Establecer isLoading en false cuando el historial se carga desde localStorage
-              this.isLoading = false;
-            } else {
-              // Manejar el caso en el que el historialParsed no es un array
-              console.error('El historial almacenado no es un array válido.');
-              this.isLoading = false;
-            }
-          } catch (error) {
-            // Manejar errores de JSON.parse
-            console.error('Error al parsear el historial almacenado:', error);
+            // Desactiva el spinner isLoading
             this.isLoading = false;
+          } else {
+            console.log('No se encontró historial en Firestore.');
           }
-        } else {
-          // Si no existe en el localStorage, obténlo desde Firestore
-          this.firestoreService.obtenerHistorialCompras(emailUsuario).subscribe((historial) => {
-            if (historial && historial.length > 0) {
-              // Formatear la fecha antes de mostrarla
-              this.historialCompras = historial.map((compra: any) => ({
-                ...compra,
-                fecha: this.formatearFecha(compra.fecha),
-                hora: this.formatearHora(compra.fecha)
-              }));
-
-              // Almacena el historial obtenido en el localStorage para futuras consultas
-              localStorage.setItem('resumenCompra', JSON.stringify(historial));
-            } else {
-              // Puedes manejar el caso en que no hay historial en Firestore
-              console.log('No se encontró historial en Firestore.');
-            }
-
-            // Establecer isLoading en false después de cargar desde Firestore
-            this.isLoading = false;
-          });
-        }
+        });
       } else {
-        // Usuario no autenticado
         this.isLoading = false;
         console.log('Usuario no autenticado. No se puede obtener el historial de compras.');
       }
     } catch (error) {
-      // Manejar errores, por ejemplo, mostrar un mensaje al usuario o registrar el error.
       console.error('Error al obtener historial:', error);
       this.isLoading = false;
     }

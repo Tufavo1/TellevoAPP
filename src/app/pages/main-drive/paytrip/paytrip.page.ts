@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AlertController, NavController } from '@ionic/angular';
+import { AlertController, AnimationController, NavController } from '@ionic/angular';
 import { AuthService } from 'src/app/services/authentication/auth.service';
 import { FirestoreService } from 'src/app/services/firebase/store/firestore.service';
 
@@ -27,7 +27,9 @@ export class PaytripPage implements OnInit {
     private router: Router,
     private navCtrl: NavController,
     private alertController: AlertController,
-    private authService: AuthService
+    private authService: AuthService,
+    private animationCtrl: AnimationController
+
   ) {
     this.cargarImagenUsuario();
 
@@ -37,6 +39,38 @@ export class PaytripPage implements OnInit {
         this.vehiculoSeleccionado = extras.state['vehiculoSeleccionado'];
       }
     });
+  }
+
+  ionViewDidEnter() {
+    this.realizarAnimacionEntrada();
+  }
+
+  realizarAnimacionEntrada() {
+    const contentElement = document.querySelector('#Content');
+    if (contentElement) {
+      const animation = this.animationCtrl
+        .create()
+        .addElement(contentElement)
+        .duration(500)
+        .fromTo('opacity', 0, 1)
+        .fromTo('transform', 'translateY(20px)', 'translateY(0)');
+
+      animation.play();
+    }
+  }
+
+  realizarAnimacionSalida() {
+    const contentElement = document.querySelector('#Content');
+    if (contentElement) {
+      const animation = this.animationCtrl
+        .create()
+        .addElement(contentElement)
+        .duration(500)
+        .fromTo('opacity', 1, 0)
+        .fromTo('transform', 'translateY(0)', 'translateY(20px)');
+
+      animation.play();
+    }
   }
 
   ngOnInit() {
@@ -139,6 +173,7 @@ export class PaytripPage implements OnInit {
     });
 
     await alert.present();
+    this.realizarAnimacionSalida();
   }
 
   cargarImagenUsuario() {
@@ -152,6 +187,7 @@ export class PaytripPage implements OnInit {
   abrirPerfil() {
     this.cargarImagenUsuario();
     this.navCtrl.navigateForward('main-drive/profile')
+    this.realizarAnimacionSalida();
   }
 
   async mostrarConfirmacionCerrarSesion() {
@@ -176,24 +212,43 @@ export class PaytripPage implements OnInit {
     });
 
     await alert.present();
+    this.realizarAnimacionSalida();
   }
 
   cerrarSesion() {
     this.authService.cerrarSesion()
-      .then(() => {
-        this.router.navigate(['/login']);
-      })
-      .catch(error => {
-        console.error('Error al cerrar sesión: ', error);
-      });
   }
 
   volverPaginaAnterior() {
     this.navCtrl.navigateForward('main-drive/main');
+    this.realizarAnimacionSalida();
   }
 
   mostrarHistorial() {
     this.navCtrl.navigateForward('main-drive/history-drive')
-    console.log('Se ha hecho clic en historial');
+    this.realizarAnimacionSalida();
+  }
+
+  // Formatea el número de tarjeta mientras el usuario escribe
+  formatCardNumber() {
+    // Elimina cualquier caracter que no sea un número
+    let cleaned = this.cardNumber.replace(/\D/g, '');
+
+    // Verifica que el número de tarjeta no supere los 19 caracteres
+    if (cleaned.length > 16) {
+      cleaned = cleaned.substring(0, 16);
+    }
+
+    // Divide el número en bloques de 4 dígitos
+    let formatted = '';
+    for (let i = 0; i < cleaned.length; i++) {
+      if (i > 0 && i % 4 === 0) {
+        formatted += '-';
+      }
+      formatted += cleaned[i];
+    }
+
+    // Asigna el número formateado de nuevo al modelo
+    this.cardNumber = formatted;
   }
 }

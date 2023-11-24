@@ -76,12 +76,15 @@ export class ForgotpassPage implements OnInit {
       .then(() => {
         // El correo de restablecimiento se envió con éxito
         // Muestra un mensaje de éxito y redirige al usuario a la página de inicio de sesión
-        this.mensaje = 'El correo de restablecimiento se envió con éxito.';
+        this.mensaje = 'El link de recuperacion de Contrasennia se envio exitosamente, Revisa tu bandeja de entrada GMAIL.';
         setTimeout(() => {
-          this.mensaje = ''; // Limpia el mensaje después de un tiempo
-          this.navCtrl.navigateBack('/login'); // Redirige al usuario a la página de inicio de sesión
+          //Aqui se limpiara el mensaje despues de unos segundos
+          this.mensaje = '';
+          // y luego que se limpie redirigira al usuario al inicio de sesion
+          this.navCtrl.navigateBack('main-login/login');
         }, 3000);
       })
+      //En caso de un error que envie un error en caso que no pueda conectarse o en caso que no exista la cuenta
       .catch(error => {
         console.error('Error al enviar el correo de restablecimiento: ', error);
         this.mensaje = 'Error al enviar el correo de restablecimiento.';
