@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "5895976765",
+    "firebase_url": "https://tellevoionic-dc922-default-rtdb.firebaseio.com",
+    "project_id": "tellevoionic-dc922",
+    "storage_bucket": "tellevoionic-dc922.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:5895976765:android:d50781e9b07738fbe3b754",
+        "android_client_info": {
+          "package_name": "ProgramsFavorite.Tellevoapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "5895976765-mdf1bg1qu25bd8uei1s28396d0v5gs38.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDzZStW8is7WCkOcbVI0NmqD_wUt_nM5A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "5895976765-mdf1bg1qu25bd8uei1s28396d0v5gs38.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
